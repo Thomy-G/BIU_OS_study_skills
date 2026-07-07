@@ -1,0 +1,229 @@
+{
+  "main": {
+    "id": "c647dba90e18dcd0",
+    "type": "split",
+    "children": [
+      {
+        "id": "68bdb0720bd0b308",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6ddda6f4d7e316e3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Questions.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Questions"
+            }
+          },
+          {
+            "id": "6a716d15f8859a4a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Solutions.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Solutions"
+            }
+          }
+        ]
+      },
+      {
+        "id": "1932792d27096122",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "34f0992c7ac40570",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Answers_Template"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "128935c0e339b3ab",
+    "type": "split",
+    "children": [
+      {
+        "id": "2f586d4fd6bd5165",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a3da4c96a5dcb8a1",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "4d95886a25605e4c",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d0d662e85dd16222",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "352cacce202ca069",
+    "type": "split",
+    "children": [
+      {
+        "id": "60584a8b0c3a2c18",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7147f792f5fa91df",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Answers_Template"
+            }
+          },
+          {
+            "id": "3e96b5579c5eeee3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Answers_Template"
+            }
+          },
+          {
+            "id": "57bafeb25f0a2c3f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "7ffe3397970f3650",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "fbca40ad5d6f96e4",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Answers_Template"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "34f0992c7ac40570",
+  "lastOpenFiles": [
+    "Practice_Sessions/Comprehensive_OS_Practice/Answer_Thomas.md",
+    "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+    "Practice_Sessions/Comprehensive_OS_Practice/Questions.md",
+    "Practice_Sessions/Comprehensive_OS_Practice/Solutions.md",
+    "latex-suite-snippets.js",
+    "Lmao.md"
+  ]
+}

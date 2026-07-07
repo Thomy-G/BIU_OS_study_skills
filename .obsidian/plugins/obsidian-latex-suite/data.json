@@ -13,7 +13,7 @@
   "loadSnippetVariablesFromFile": false,
   "snippetsFileLocation": "latex-suite-snippets.js",
   "snippetVariablesFileLocation": "",
-  "concealEnabled": false,
+  "concealEnabled": true,
   "concealRevealTimeout": 0,
   "colorPairedBracketsEnabled": true,
   "highlightCursorBracketsEnabled": true,

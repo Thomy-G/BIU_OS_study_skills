@@ -47,12 +47,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answer_Thomas.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Answers_Template"
+              "title": "Answer_Thomas"
             }
           }
         ]
@@ -112,7 +112,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "352cacce202ca069",
@@ -219,11 +220,15 @@
   },
   "active": "34f0992c7ac40570",
   "lastOpenFiles": [
-    "README.md",
-    "Practice_Sessions/Comprehensive_OS_Practice/Answer_Thomas.md",
-    "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
     "Practice_Sessions/Comprehensive_OS_Practice/Questions.md",
+    "Practice_Sessions/Comprehensive_OS_Practice_2/Solutions.md",
+    "Practice_Sessions/Comprehensive_OS_Practice_2/Answers_Template.md",
+    "Practice_Sessions/Comprehensive_OS_Practice_2/Questions.md",
+    "Practice_Sessions/Comprehensive_OS_Practice_2",
+    "Practice_Sessions/Comprehensive_OS_Practice/Answer_Thomas.md",
     "Practice_Sessions/Comprehensive_OS_Practice/Solutions.md",
+    "Practice_Sessions/Comprehensive_OS_Practice/Answers_Template.md",
+    "README.md",
     "latex-suite-snippets.js",
     "Lmao.md"
   ]

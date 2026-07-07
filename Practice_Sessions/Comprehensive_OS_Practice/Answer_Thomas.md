@@ -1,7 +1,9 @@
 # Operating Systems (89-231) — Comprehensive Practice Answers
-## User Submission Template
+## Graded Answer Sheet — Thomas
 
-Please fill in your answers in the sections below. Once completed, request the agent to grade/check this file.
+> [!NOTE]
+> **Total Score: 124 / 145 Points (85.5%)**
+> Check individual questions for grading badges and the bottom of the page for the final tally table.
 
 ---
 
@@ -21,6 +23,13 @@ Cd must be built in becaise if we had it as a seeparate program the shell would 
      Read
    - **Others Actions:** 
      Read
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 1 Score:</strong></td><td><strong style="color: #c62828;">5 / 10</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">1.1: 5/5. 1.2: 0/5 (calculated original permissions 0644 instead of new permissions after chmod 751).</td></tr>
+</table>
+</div>
 
 ---
 
@@ -54,6 +63,12 @@ flowchart TD
    ```
    *Explanation of scheduling factors:*
    
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 2 Score:</strong></td><td><strong style="color: #e65100;">17 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">2.1: 9/10 (Beta calls exit(0) and does not print Omega). 2.2: 8/10 (missing description under scheduling factors).</td></tr>
+</table>
+</div>
 
 ---
 
@@ -74,7 +89,13 @@ flowchart TD
 2. **Blocking Operations in Many-to-One ($M:1$) Models:**
    
 Other User threads have to wait on the IO interrupt to end, while on the 1:1 model they don't need to wait
-   
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 3 Score:</strong></td><td><strong style="color: #e65100;">13 / 15</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">3.1: 7/7. 3.2: 6/8 (missed explaining that in M:1 the kernel only sees 1 process thread, thus blocking all user-space threads).</td></tr>
+</table>
+</div>
 
 ---
 
@@ -163,8 +184,12 @@ $\frac{12+13+8}{3} =11$
 In this specific case there are 2 factors to consider, first the smaller the time quantum is the higher the chance we switch to a process that is about to finish, but taking into account that there is a context switch overhead this affect how many switches we want to make.
 We want to keep the time quantum above the Overhead by a reasonable amount so most of the time of the CPU isn't wasted on overhead
 
-
-   
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 4 Score:</strong></td><td><strong style="color: #e65100;">17 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">4.1: 14.5/15 (minor subtraction notation typo: 18-0 = 17 instead of 17-0 = 17). 4.2: 2.5/5 (incomplete trade-off explanation, missing user experience/responsiveness side).</td></tr>
+</table>
+</div>
 
 ---
 
@@ -184,12 +209,31 @@ P_3 & 0 & 1 & 1
 
 2. **Safety State Evaluation:**
    
+   $$
+   \displaylines{
+\text{Available } = TOTAL - \sum C_{i}(Allocation)\\
+\text{Available } = \begin{pmatrix}8 & 5 & 7\end{pmatrix} - \begin{pmatrix}7 & 2 & 3\end{pmatrix} = \begin{pmatrix}1 & 3 & 4\end{pmatrix}\\
+P_{0}Need = \begin{pmatrix}0 & 2 & 0\end{pmatrix}< (1,3,4) \implies Finish[0] = true, Available += Alloc[0]\\
+Available = (1,4,4)\\
+P_{1}Need = (1,2,2)<(1,4,4) \implies Finish[1] = True, Available += Alloc[1]\\
+Available = (3,4,4)
+P_{2}Need = (6,0,0)>(3,4,4)\implies Skip\\
+P_{3}Need<Available\\
+\text{Given that }P_{2}\text{ max is more than total system resources there is no way of not}\\
+\text{creating a deadlock}
+   }
+   $$
    
+4. **Dynamic Request Tracking:**
    
-3. **Dynamic Request Tracking:**
-   
-   *Write your answer here. Can the OS grant the request of $[1, 0, 1]$ to $P_1$? Show calculations:*
-   
+  As stated before p2 needs more resources than totally available to the system so no matter what we do we can't get to a safe state without upgrading hardware
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 5 Score:</strong></td><td><strong style="color: #e65100;">17 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">5.1: 5/5. 5.2: 10/10. 5.3: 2/5 (did not run speculative safety check math to prove unsafe request).</td></tr>
+</table>
+</div>
 
 ---
 
@@ -198,14 +242,38 @@ P_3 & 0 & 1 & 1
 
 1. **Address Bit Partitioning:**
    - **Outer Page Table Index bits:** 
+10 bits
    - **Inner Page Table Index bits:** 
+9 bits
    - **Page Offset bits:** 
-   *Show address bit division breakdown calculation:*
+Page offset is based on page size, $log(8KB) =\log(8192) = 13$ bits
 
 2. **EAT Calculation:**
    
-   *Write your calculations and the final required TLB Hit Ratio ($\alpha$) here:*
-   
+The Eat for a 2 level page table is:
+$$
+\alpha \cdot (x + \varepsilon) + (1-\alpha) (3x+\varepsilon)
+$$
+For our particular case:
+$$
+\displaylines{
+125> \alpha \cdot (100 + 10) + (1-a)\cdot (300+10)\\
+= a 110 +310 -a310 = -a200 +310\\
+125>-a 200 + 310\\
+125-310>-a 200\\
+-185 > -a 200\\
+-\frac{185}{-200}<a\\
+0.925 <a
+}
+$$
+In conclusion, the change of hitting the correct entry in the TLB should be more than 0.925 to hit a EAT of 125 or less
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 6 Score:</strong></td><td><strong style="color: #2e7d32;">20 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">6.1: 10/10. 6.2: 10/10. Perfect!</td></tr>
+</table>
+</div>
 
 ---
 
@@ -214,19 +282,59 @@ P_3 & 0 & 1 & 1
 
 1. **FIFO Trace & Anomaly Check:**
    - **FIFO with 3 Frames:**
-     - *Show trace or faults:*
-     - *Total Page Faults:*
+     
+
+|          | 1   | 2   | 3   | 4   | 1   | 2   | 5   | 1   | 2   | 3   | 4   | 5   |
+| -------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1       |     | 1   | 1   | 1   | 4   | 4   | 4   | 5   | 5   | 5   | 5   | 5   |
+| F2       |     |     | 2   | 2   | 2   | 1   | 1   | 1   | 1   | 1   | 3   | 3   |
+| F3       |     |     |     | 3   | 3   | 3   | 2   | 2   | 2   | 2   | 2   | 4   |
+| Hit/Miss | M   | M   | M   | M   | M   | M   | M   | H   | H   | M   | M   | H   |
+
+There were 12-3 = 9 misses that lead to page faults
+   
    - **FIFO with 4 Frames:**
-     - *Show trace or faults:*
-     - *Total Page Faults:*
+     
+
+
+
+|     | 1   | 2   | 3   | 4   | 1   | 2   | 5   | 1   | 2   | 3   | 4   | 5   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1  |     | 1   | 1   | 1   | 1   | 1   | 1   | 5   | 5   | 5   | 5   | 4   |
+| F2  |     |     | 2   | 2   | 2   | 2   | 2   | 2   | 1   | 1   | 1   | 1   |
+| F3  |     |     |     | 3   | 3   | 3   | 3   | 3   | 3   | 2   | 2   | 2   |
+| F4  |     |     |     |     | 4   | 4   | 4   | 4   | 4   | 4   | 3   | 3   |
+| Hit | M   | M   | M   | M   | H   | H   | M   | M   | M   | M   | M   | M   |
+There were 12-2 = 10 misses that lead to page faults
+
    - **Belady's Anomaly Status:** *Does it occur? Yes/No, and why:*
+Because the amount of page faults *Increased* with the size counter-intuitively we can say that this is a case of Beldady's Anomaly
+
 
 2. **LRU Frame Mapping:**
    - **LRU with 3 Frames:**
      - *Show trace or faults:*
      - *Total Page Faults:*
+
+|          | 1   | 2   | 3   | 4   | 1   | 2   | 5   | 1   | 2   | 3   | 4   | 5   |
+| -------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| F1       |     | 1   | 1   | 1   | 4   | 4   | 4   | 5   | 5   | 5   | 3   | 3   |
+| F2       |     |     | 2   | 2   | 2   | 1   | 1   | 1   | 1   | 1   | 1   | 4   |
+| F3       |     |     |     | 3   | 3   | 3   | 2   | 2   | 2   | 2   | 2   | 2   |
+| Hit/Miss | M   | M   | M   | M   | M   | M   | M   | H   | H   | M   | M   | M   |
+
+There where 12-2=10 Misses that lead to page faults
+
    - **Comparison with FIFO 3-frame trace:**
-     *Write comparison here:*
+
+In this particular case LRU is worse than fifo for 3 frames because of the order of the page requests
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 7 Score:</strong></td><td><strong style="color: #2e7d32;">20 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">7.1: 12/12. 7.2: 8/8. Perfect!</td></tr>
+</table>
+</div>
 
 ---
 
@@ -235,9 +343,48 @@ P_3 & 0 & 1 & 1
 
 1. **Asymmetric Inode Sizing:**
    
-   *Write your capacity calculations and final file size limits here:*
+$$
+\displaylines{
+BS = \text{Block size}\\
+PS = \text{Pointer Size}\\
+\text{Maximum file size }= \text{direct} + \frac{BS}{PS} + \left( \frac{BS}{PS} \right)^{2} + \left( \frac{BS}{PS} \right)^{3} = 10 + (1024) + (1024)^{2}+(1024)^{3} =\\
+10 + 1024 + 1048576 + 1073741824 = 1.11 GB
+}
+$$
    
 2. **Disk Scheduling Calculations:**
    
-   *Show your C-SCAN track movement sequence and total seek distance calculation here:*
+   C scan is a circular algorithm so it will jump from 299 to 0
+Ordered list:
+15,45,80,185,250,290
+Starting from 120:
+120->185->250->290->299->0->15->45->80
+This can be summarized as 120->299->0->80, which is:
+$$
+299-120 + 80 -0 = 179 +  80 = 259
+$$
+Therefore the disk head traverses 259 tracks
    
+
+<div align="right">
+<table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+  <tr><td><strong>Part 8 Score:</strong></td><td><strong style="color: #e65100;">15 / 20</strong></td></tr>
+  <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">8.1: 5/10 (forgot block size factor in inode capacity, unit 1.11 GB incorrect). 8.2: 10/10 (corrected to 259 tracks).</td></tr>
+</table>
+</div>
+
+---
+
+## 📊 Exam Tally & Final Score
+
+| Part | Topic / Description | Score | Max Points | Feedback |
+| :--- | :--- | :---: | :---: | :--- |
+| **Part 1** | Shell Commands & ACL Permissions | **5** | 10 | Solved for original permissions `0644` instead of `751`. |
+| **Part 2** | Processes (Fork Trees & wait) | **17** | 20 | Beta shouldn't lead to Omega; missing scheduling description. |
+| **Part 3** | Threads Model & Resource Sharing | **13** | 15 | Incomplete explanation of blocking in M:1 model. |
+| **Part 4** | CPU Scheduling (FCFS & RR) | **17** | 20 | Minor FCFS notation typo; incomplete overhead trade-offs. |
+| **Part 5** | Banker's Algorithm (Deadlocks) | **17** | 20 | Missing speculative safety checks for P1 request. |
+| **Part 6** | Main Memory (Two-Level Paging) | **20** | 20 | Perfect. |
+| **Part 7** | Virtual Memory (Page Replacement) | **20** | 20 | Perfect. |
+| **Part 8** | File System & Disk Scheduling | **15** | 20 | Inode capacity missing block size factor; C-SCAN seek corrected to 259. |
+| **Total** | | **124** | **145** | **Final Grade: 85.5% (Very Good)** |

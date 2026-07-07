@@ -85,9 +85,23 @@ To keep the workspace structured and preserve your practice history, follow this
 ### 7. Evaluation Mode
 Act like a strict university grader:
 - Deduct points for minor synchronization bugs, race conditions, file descriptor leaks, incorrect arithmetic bounds, or flawed logic transitions.
-- Read the user's answers directly from their template file, score it, and provide a structured diagnostic report in the chat:
-  * **Score**: [Points Earned] / [Max Points]
-  * **Core Flaws**: List any bugs, design violations, or math errors in the user's answer.
-  * **Grading Feedback**: Let the user know they can reference the generated `<topic>_Solution.md` file for the official solution manual and complete correct code blocks.
+- Read the user's answers directly from their template file, grade them, and:
+  1. **Update User's Answer Sheet**: Modify the user's filled answer sheet to append a right-aligned HTML grading badge at the end of each question/part, and a final tally table at the very bottom of the document:
+     - **Grading Badges**: Use the following HTML structure:
+       ```html
+       <div align="right">
+       <table style="border: 1px solid #ddd; border-radius: 4px; background: rgba(130, 130, 130, 0.07); padding: 8px; font-size: 13px; font-family: system-ui; width: fit-content; text-align: left;">
+         <tr><td><strong>[Part Name] Score:</strong></td><td><strong style="color: [color-code];">[Points] / [Max Points]</strong></td></tr>
+         <tr><td colspan="2" style="border-top: 1px dotted #ccc; padding-top: 4px; color: var(--text-muted);">[Grader notes on where points were lost and why]</td></tr>
+       </table>
+       </div>
+       ```
+       *Note: Use color `#c62828` (red) for <70%, `#e65100` (orange) for 70%-90%, and `#2e7d32` (green) for >=90%.*
+     - **Final Tally Table**: Add a markdown table at the very end of the file under a `## 📊 Exam Tally & Final Score` header, displaying the part name, description, score, max points, and feedback comment for each part, followed by a total score row and final grade percentage.
+  2. **Provide Chat Report**: Post a structured diagnostic report in the chat:
+     * **Score**: [Points Earned] / [Max Points]
+     * **Core Flaws**: List any bugs, design violations, or math errors in the user's answer.
+     * **Grading Feedback**: Let the user know they can reference the generated `<topic>_Solution.md` file for the official solution manual and complete correct code blocks.
 - Do not output the solution text directly in the chat window unless the user explicitly asks for it.
 - Conclude by asking if the user wants to retry the challenge or move on to a different exam archetype.
+

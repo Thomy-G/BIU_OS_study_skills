@@ -4,26 +4,33 @@
 }
 
 @media print {
+
   /* Set background on both HTML and BODY to ensure no white edges remain */
-  html, body {
+  html,
+  body {
     background-color: #1e1e1e !important;
   }
 
   /* Force dark mode color variables during PDF export/printing */
-  body, .print, .markdown-preview-view, .markdown-rendered {
+  body,
+  .print,
+  .markdown-preview-view,
+  .markdown-rendered {
     --background-primary: #1e1e1e !important;
     --background-primary-alt: #181818 !important;
     --background-secondary: #2a2a2a !important;
     --background-secondary-alt: #202020 !important;
-    --text-normal: #e2e8f0 !important;
-    --text-muted: #94a3b8 !important;
-    --text-faint: #475569 !important;
-    --text-accent: #a78bfa !important;
-    --table-header-background: #2d3748 !important;
-    --table-line: #4a5568 !important;
-    --divider-color: #3f3f3f !important;
-    --code-normal: #fb7185 !important;
-    --code-background: #18181b !important;
+    --text-normal: #c5d1dd !important;
+    /* Softer silver-gray to prevent eye strain */
+    --text-muted: #7e8c9d !important;
+    /* Muted slate-gray */
+    --text-faint: #4a5568 !important;
+    --text-accent: #9f82f8 !important;
+    --table-header-background: #252b36 !important;
+    --table-line: #3f4756 !important;
+    --divider-color: #383838 !important;
+    --code-normal: #f472b6 !important;
+    --code-background: #151518 !important;
 
     background-color: var(--background-primary) !important;
     color: var(--text-normal) !important;
@@ -49,7 +56,8 @@
     background-color: var(--background-secondary) !important;
   }
 
-  th, td {
+  th,
+  td {
     border: 1px solid var(--table-line) !important;
     padding: 6px 10px !important;
     color: var(--text-normal) !important;
@@ -69,7 +77,8 @@
   }
 
   /* Style preformatted code blocks */
-  pre, .codeblock {
+  pre,
+  .codeblock {
     background-color: var(--code-background) !important;
     border: 1px solid var(--table-line) !important;
     border-radius: 6px !important;
@@ -85,9 +94,15 @@
     padding: 0 !important;
   }
 
-  /* Ensure headings remain bright and readable */
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--text-normal) !important;
+  /* Ensure headings remain bright and readable but not blinding */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #cbd5e1 !important;
+    /* Soft slate-200 instead of bright white */
     border-bottom: 1px solid var(--divider-color) !important;
   }
 
@@ -98,7 +113,8 @@
   }
 
   /* Adjust blockquotes/callouts for contrast */
-  blockquote, .callout {
+  blockquote,
+  .callout {
     background-color: var(--background-secondary-alt) !important;
     border-left: 4px solid var(--text-accent) !important;
     color: var(--text-muted) !important;

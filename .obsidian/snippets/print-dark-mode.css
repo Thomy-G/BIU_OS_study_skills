@@ -59,12 +59,30 @@
     background-color: var(--table-header-background) !important;
   }
 
-  /* Style preformatted code blocks and inline code */
-  pre, code, .codeblock {
+  /* Style inline code only */
+  code {
     background-color: var(--code-background) !important;
     color: var(--code-normal) !important;
     border: 1px solid var(--table-line) !important;
     border-radius: 4px !important;
+    padding: 2px 4px !important;
+  }
+
+  /* Style preformatted code blocks */
+  pre, .codeblock {
+    background-color: var(--code-background) !important;
+    border: 1px solid var(--table-line) !important;
+    border-radius: 6px !important;
+    padding: 12px !important;
+  }
+
+  /* Remove background, borders, and padding from code elements nested inside pre blocks */
+  pre code {
+    background-color: transparent !important;
+    color: inherit !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
   }
 
   /* Ensure headings remain bright and readable */

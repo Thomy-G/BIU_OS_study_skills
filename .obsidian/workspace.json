@@ -47,12 +47,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Practice_Sessions/Comprehensive_OS_Practice/Answer_Thomas.md",
+                "file": "OS_Exam_Solver_Guide.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Answer_Thomas"
+              "title": "OS_Exam_Solver_Guide"
             }
           }
         ]
@@ -112,8 +112,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "352cacce202ca069",
@@ -220,6 +219,7 @@
   },
   "active": "34f0992c7ac40570",
   "lastOpenFiles": [
+    "Practice_Sessions/Comprehensive_OS_Practice/Answer_Thomas.md",
     "OS_Exam_Solver_Guide.md",
     "Practice_Sessions/Exam_Supplementary_Practice/Solutions.md",
     "Practice_Sessions/Exam_Supplementary_Practice/Questions.md",
@@ -252,7 +252,6 @@
     "Past_Exams/Exam_Blueprint_3.md",
     "Past_Exams/Exam_Blueprint_2.md",
     "Past_Exams/Exam_Blueprint_1.md",
-    "Past_Exams/Exam_2025_Moed_B.md",
     "Practice_Sessions/Comprehensive_OS_Practice_2",
     "latex-suite-snippets.js"
   ]

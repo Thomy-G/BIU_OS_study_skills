@@ -1,0 +1,72 @@
+@media print {
+  /* Force dark mode color variables during PDF export/printing */
+  body, .print, .markdown-preview-view, .markdown-rendered {
+    --background-primary: #1e1e1e !important;
+    --background-primary-alt: #181818 !important;
+    --background-secondary: #2a2a2a !important;
+    --background-secondary-alt: #202020 !important;
+    --text-normal: #e2e8f0 !important;
+    --text-muted: #94a3b8 !important;
+    --text-faint: #475569 !important;
+    --text-accent: #a78bfa !important;
+    --table-header-background: #2d3748 !important;
+    --table-line: #4a5568 !important;
+    --divider-color: #3f3f3f !important;
+    --code-normal: #fb7185 !important;
+    --code-background: #18181b !important;
+
+    background-color: var(--background-primary) !important;
+    color: var(--text-normal) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force background color consistency across the print canvas */
+  .markdown-rendered {
+    background-color: var(--background-primary) !important;
+    color: var(--text-normal) !important;
+  }
+
+  /* Style tables to render in dark mode */
+  table {
+    border-collapse: collapse !important;
+    background-color: var(--background-secondary) !important;
+  }
+
+  th, td {
+    border: 1px solid var(--table-line) !important;
+    padding: 6px 10px !important;
+    color: var(--text-normal) !important;
+  }
+
+  th {
+    background-color: var(--table-header-background) !important;
+  }
+
+  /* Style preformatted code blocks and inline code */
+  pre, code, .codeblock {
+    background-color: var(--code-background) !important;
+    color: var(--code-normal) !important;
+    border: 1px solid var(--table-line) !important;
+    border-radius: 4px !important;
+  }
+
+  /* Ensure headings remain bright and readable */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-normal) !important;
+    border-bottom: 1px solid var(--divider-color) !important;
+  }
+
+  /* Set link text color to matches accent style */
+  a {
+    color: var(--text-accent) !important;
+    text-decoration: none !important;
+  }
+
+  /* Adjust blockquotes/callouts for contrast */
+  blockquote, .callout {
+    background-color: var(--background-secondary-alt) !important;
+    border-left: 4px solid var(--text-accent) !important;
+    color: var(--text-muted) !important;
+  }
+}

@@ -1,4 +1,14 @@
+/* Remove browser print margins so the background color can bleed edge-to-edge */
+@page {
+  margin: 0 !important;
+}
+
 @media print {
+  /* Set background on both HTML and BODY to ensure no white edges remain */
+  html, body {
+    background-color: #1e1e1e !important;
+  }
+
   /* Force dark mode color variables during PDF export/printing */
   body, .print, .markdown-preview-view, .markdown-rendered {
     --background-primary: #1e1e1e !important;
@@ -19,6 +29,12 @@
     color: var(--text-normal) !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  /* Add padding to the body to act as margins since @page margin is removed */
+  body {
+    padding: 20mm !important;
+    box-sizing: border-box !important;
   }
 
   /* Force background color consistency across the print canvas */

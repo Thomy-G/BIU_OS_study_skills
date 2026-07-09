@@ -177,42 +177,212 @@ This comprehensive guide provides step-by-step algorithmic recipes, formulas, ma
 
 ---
 
-### 🚶‍♂️ Classical Synchronization Archetypes
+### 🚶‍♂️ Classical Synchronization Archetypes (Complete C Code Examples)
 
-#### 1. Readers-Writers Variant
-* **Reader Priority (Starvation Hazard)**: Readers enter continuously, incrementing `read_count`. The Writer is blocked at `database_sem` and starves.
-* **FIFO Gatekeeper (No Starvation)**:
-  Use a `queue` semaphore (initialized to 1) to block new Readers if a Writer is already waiting:
-  ```c
-  // Reader Code
-  sem_wait(&queue);
-  pthread_mutex_lock(&mutex);
-  read_count++;
-  if (read_count == 1) sem_wait(&database_sem);
-  pthread_mutex_unlock(&mutex);
-  sem_post(&queue);
-  
-  // Read database
-  
-  pthread_mutex_lock(&mutex);
-  read_count--;
-  if (read_count == 0) sem_post(&database_sem);
-  pthread_mutex_unlock(&mutex);
-  ```
+#### 1. Readers-Writers (Starvation-Free / FIFO Version)
+This implementation uses a `queue` semaphore to prevent Readers from continuously entering and starving waiting Writers.
+```c
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <unistd.h>
+
+sem_t database_sem;      // Controls access to database (initialized to 1)
+sem_t queue;             // Enforces FIFO ordering (initialized to 1)
+pthread_mutex_t mutex;   // Protects reader_count (initialized)
+int reader_count = 0;
+
+void* Reader(void* arg) {
+    int id = *(int*)arg;
+    
+    // Entry Section
+    sem_wait(&queue);                // Check if any Writer is ahead in the queue
+    pthread_mutex_lock(&mutex);      // Lock to update reader count
+    reader_count++;
+    if (reader_count == 1) {
+        sem_wait(&database_sem);     // First reader locks database from Writers
+    }
+    pthread_mutex_unlock(&mutex);
+    sem_post(&queue);                // Release queue gatekeeper
+    
+    // --- CRITICAL SECTION: Read Database ---
+    printf("Reader %d is reading...\n", id);
+    usleep(100000); // simulate reading
+    
+    // Exit Section
+    pthread_mutex_lock(&mutex);
+    reader_count--;
+    if (reader_count == 0) {
+        sem_post(&database_sem);     // Last reader unlocks database for Writers
+    }
+    pthread_mutex_unlock(&mutex);
+    
+    return NULL;
+}
+
+void* Writer(void* arg) {
+    int id = *(int*)arg;
+    
+    // Entry Section
+    sem_wait(&queue);                // Line up in the queue
+    sem_wait(&database_sem);         // Acquire database lock (exclusive)
+    sem_post(&queue);                // Release queue gatekeeper
+    
+    // --- CRITICAL SECTION: Write Database ---
+    printf("Writer %d is writing...\n", id);
+    usleep(150000); // simulate writing
+    
+    // Exit Section
+    sem_post(&database_sem);         // Unlock database
+    
+    return NULL;
+}
+```
 
 #### 2. Bounded-Buffer (Producer-Consumer)
-* Uses `empty` (initialized to $N$), `full` (initialized to $0$), and `mutex` (initialized to $1$).
-* Always call `sem_wait(&empty)` or `sem_wait(&full)` **before** locking the mutex (`sem_wait(&mutex)`). Swapping them causes immediate **deadlock** (a thread holds the mutex while blocked waiting for space/data).
+Uses counting semaphores to track free/filled slots and protect buffer pointers.
+```c
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#### 3. Dining Philosophers (Deadlock & Solutions)
-* **Deadlock**: 5 philosophers sit at a table. Each acquires their left chopstick (`sem_wait(&chopstick[i])`). When they try to acquire their right chopstick (`sem_wait(&chopstick[(i+1)%5])`), all block indefinitely.
-* **Deadlock-Free Solutions**:
-  1. **Limit Concurrent Eaters (Gatekeeper)**: Introduce a semaphore `gatekeeper` initialized to $4$. Philosophers must call `sem_wait(&gatekeeper)` before picking up any chopsticks. Since at most 4 philosophers can sit, at least one chopstick will be free.
-  2. **Asymmetric Acquisition**: Odd philosophers pick up left then right; even philosophers pick up right then left. This breaks the circular wait condition.
+#define BUFFER_SIZE 5
+int buffer[BUFFER_SIZE];
+int in = 0, out = 0;
+
+sem_t empty;             // Counts empty buffer slots (init to BUFFER_SIZE)
+sem_t full;              // Counts filled buffer slots (init to 0)
+pthread_mutex_t mutex;   // Mutex protecting buffer modification (init to 1)
+
+void* Producer(void* arg) {
+    for (int i = 0; i < 10; i++) {
+        int item = rand() % 100;
+        
+        sem_wait(&empty);            // Decrement empty slot count (block if buffer full)
+        pthread_mutex_lock(&mutex);  // Enter critical section
+        
+        buffer[in] = item;
+        printf("Produced: %d at slot %d\n", item, in);
+        in = (in + 1) % BUFFER_SIZE;
+        
+        pthread_mutex_unlock(&mutex);// Leave critical section
+        sem_post(&full);             // Increment full slot count (wake waiting consumers)
+        usleep(100000);
+    }
+    return NULL;
+}
+
+void* Consumer(void* arg) {
+    for (int i = 0; i < 10; i++) {
+        sem_wait(&full);             // Decrement full slot count (block if buffer empty)
+        pthread_mutex_lock(&mutex);  // Enter critical section
+        
+        int item = buffer[out];
+        printf("Consumed: %d from slot %d\n", item, out);
+        out = (out + 1) % BUFFER_SIZE;
+        
+        pthread_mutex_unlock(&mutex);// Leave critical section
+        sem_post(&empty);            // Increment empty slot count (wake waiting producers)
+        usleep(150000);
+    }
+    return NULL;
+}
+```
+
+#### 3. Dining Philosophers (Deadlock-Free via Gatekeeper)
+Limits the number of concurrent philosophers who can sit at the table to $N-1$, ensuring at least one philosopher can always pick up both chopsticks.
+```c
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#define N 5
+sem_t chopsticks[N];     // Chopstick semaphores (all init to 1)
+sem_t table_gatekeeper;  // Limits eaters to N-1 (init to N-1, i.e., 4)
+
+void* Philosopher(void* arg) {
+    int id = *(int*)arg;
+    int left = id;
+    int right = (id + 1) % N;
+    
+    while (1) {
+        printf("Philosopher %d is thinking...\n", id);
+        usleep(100000);
+        
+        // Entry Section
+        sem_wait(&table_gatekeeper); // Sit down at table (max 4 allowed concurrently)
+        sem_wait(&chopsticks[left]); // Pick up left chopstick
+        sem_wait(&chopsticks[right]);// Pick up right chopstick
+        
+        // --- CRITICAL SECTION: Eat ---
+        printf("Philosopher %d is eating!\n", id);
+        usleep(100000);
+        
+        // Exit Section
+        sem_post(&chopsticks[right]);// Put down right chopstick
+        sem_post(&chopsticks[left]); // Put down left chopstick
+        sem_post(&table_gatekeeper); // Stand up from table
+    }
+    return NULL;
+}
+```
 
 #### 4. Molecule Builder ($H_2O$)
-* Coordinate threads printing `H` and `O` to output complete triplets (`HHO`, `HOH`, `OHH`).
-* Uses a `print_barrier` semaphore initialized to 1 to serialize printing, and locks to track `h_count` and `o_count`.
+Serially groups and prints completed water molecule triplets (`HHO`, `HOH`, `OHH`) using a print barrier to prevent interleaved outputs from different groups.
+```c
+#include <pthread.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <unistd.h>
+
+int h_count = 0, o_count = 0;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+sem_t h_queue;           // Block hydrogen threads (init to 0)
+sem_t o_queue;           // Block oxygen threads (init to 0)
+sem_t print_barrier;     // Serializes the printed group output (init to 1)
+
+void* Hydrogen(void* arg) {
+    pthread_mutex_lock(&lock);
+    h_count++;
+    if (h_count >= 2 && o_count >= 1) {
+        // We have a full group! Wake up the others
+        h_count -= 2; o_count -= 1;
+        sem_wait(&print_barrier); // Acquire print lock for this group
+        sem_post(&h_queue);
+        sem_post(&o_queue);
+        pthread_mutex_unlock(&lock);
+    } else {
+        pthread_mutex_unlock(&lock);
+        sem_wait(&h_queue);       // Wait to be grouped
+    }
+    
+    printf("H");
+    return NULL;
+}
+
+void* Oxygen(void* arg) {
+    pthread_mutex_lock(&lock);
+    o_count++;
+    if (h_count >= 2 && o_count >= 1) {
+        // We have a full group! Wake up the others
+        h_count -= 2; o_count -= 1;
+        sem_wait(&print_barrier); // Acquire print lock for this group
+        sem_post(&h_queue);
+        sem_post(&h_queue);
+        pthread_mutex_unlock(&lock);
+    } else {
+        pthread_mutex_unlock(&lock);
+        sem_wait(&o_queue);       // Wait to be grouped
+    }
+    
+    printf("O");
+    sem_post(&print_barrier);    // Release print lock so next group can print
+    return NULL;
+}
+```
 
 ---
 
@@ -416,3 +586,197 @@ Calculate target block index $B = \lfloor \text{Offset} / S_{\text{block}} \rflo
 * **System V IPC Deletion (`IPC_RMID`)**:
   * **Shared Memory**: Calling `shmctl(shmid, IPC_RMID, ...)` flags the segment for deletion, but the kernel only destroys it when **all attached processes** detach (`shmdt`).
   * **Semaphores**: Calling `semctl(semid, 0, IPC_RMID)` destroys the semaphore set **immediately**, reclaiming resources and causing any waiting processes to fail with an error.
+
+---
+
+### 🚶‍♂️ Complete Systems Programming C Code Examples
+
+#### 1. Fork, Pipe, and dup2 File Descriptor Redirection
+Shows how to spawn a child process, redirect its stdout to a pipe, and read the output inside the parent.
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+
+int main() {
+    int pipefd[2];
+    if (pipe(pipefd) == -1) {
+        perror("pipe failed");
+        exit(1);
+    }
+
+    pid_t pid = fork();
+    if (pid == -1) {
+        perror("fork failed");
+        exit(1);
+    }
+
+    if (pid == 0) {
+        // --- CHILD PROCESS ---
+        close(pipefd[0]);            // Close unused read end of the pipe
+        
+        // Redirect stdout (descriptor slot 1) to point to the pipe's write end
+        if (dup2(pipefd[1], STDOUT_FILENO) == -1) {
+            perror("dup2 failed");
+            exit(1);
+        }
+        close(pipefd[1]);            // Close duplicated descriptor slot
+
+        // Run an external program that prints to stdout (which is now our pipe)
+        char* args[] = {"/usr/bin/echo", "Hello Parent!", NULL};
+        execv(args[0], args);
+        
+        // If execv returns, an error occurred
+        perror("execv failed");
+        exit(1);
+    } else {
+        // --- PARENT PROCESS ---
+        close(pipefd[1]);            // Close unused write end of the pipe
+        
+        wait(NULL);                  // Wait for child to exit
+        
+        char buffer[128];
+        ssize_t bytes_read = read(pipefd[0], buffer, sizeof(buffer) - 1);
+        if (bytes_read > 0) {
+            buffer[bytes_read] = '\0';
+            printf("Parent received: %s\n", buffer);
+        }
+        close(pipefd[0]);            // Close read end
+    }
+    return 0;
+}
+```
+
+#### 2. POSIX Signals Management
+Demonstrates blocking a signal, inspecting pending signals, and catching a signal using `sigaction`.
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <stdlib.h>
+
+void signal_handler(int sig) {
+    printf("Caught signal %d (SIGINT)\n", sig);
+}
+
+int main() {
+    // 1. Register signal handler using sigaction
+    struct sigaction sa;
+    sa.sa_handler = signal_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
+        perror("sigaction failed");
+        exit(1);
+    }
+
+    // 2. Block SIGINT
+    sigset_t block_mask;
+    sigemptyset(&block_mask);
+    sigaddset(&block_mask, SIGINT);
+    if (sigprocmask(SIG_BLOCK, &block_mask, NULL) == -1) {
+        perror("sigprocmask block failed");
+        exit(1);
+    }
+    printf("SIGINT is now BLOCKED. Press Ctrl+C (it will be pending).\n");
+    sleep(5); // Sleep to allow user to press Ctrl+C
+
+    // 3. Inspect pending signals
+    sigset_t pending_mask;
+    if (sigpending(&pending_mask) == -1) {
+        perror("sigpending failed");
+        exit(1);
+    }
+    if (sigismember(&pending_mask, SIGINT)) {
+        printf("SIGINT is currently PENDING!\n");
+    } else {
+        printf("No pending signals.\n");
+    }
+
+    // 4. Unblock SIGINT (handler will fire immediately if SIGINT is pending)
+    printf("Unblocking SIGINT...\n");
+    if (sigprocmask(SIG_UNBLOCK, &block_mask, NULL) == -1) {
+        perror("sigprocmask unblock failed");
+        exit(1);
+    }
+    
+    printf("Program finished successfully.\n");
+    return 0;
+}
+```
+
+#### 3. System V Shared Memory & Semaphores
+Demonstrates IPC allocation, operations, and immediate deletion via `IPC_RMID`.
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/sem.h>
+#include <unistd.h>
+
+#define SHM_SIZE 1024
+
+// Structure matching the layout required for semctl operations
+union semun {
+    int val;
+    struct semid_ds *buf;
+    unsigned short *array;
+};
+
+int main() {
+    // 1. Allocate Shared Memory Segment
+    key_t shm_key = ftok(".", 'A');
+    int shmid = shmget(shm_key, SHM_SIZE, IPC_CREAT | 0666);
+    if (shmid == -1) {
+        perror("shmget failed");
+        exit(1);
+    }
+
+    // Attach Shared Memory
+    char* shm_ptr = (char*)shmat(shmid, NULL, 0);
+    if (shm_ptr == (void*)-1) {
+        perror("shmat failed");
+        exit(1);
+    }
+    sprintf(shm_ptr, "Shared memory payload");
+
+    // 2. Allocate Semaphore Set
+    key_t sem_key = ftok(".", 'B');
+    int semid = semget(sem_key, 1, IPC_CREAT | 0666);
+    if (semid == -1) {
+        perror("semget failed");
+        exit(1);
+    }
+
+    // Initialize Semaphore to 1
+    union semun u;
+    u.val = 1;
+    if (semctl(semid, 0, SETVAL, u) == -1) {
+        perror("semctl init failed");
+        exit(1);
+    }
+
+    // Perform a 'down' operation on semaphore
+    struct sembuf sb;
+    sb.sem_num = 0;
+    sb.sem_op = -1; // -1 is decrement/down
+    sb.sem_flg = 0;
+    semop(semid, &sb, 1);
+    printf("Entered critical region via semaphore.\n");
+
+    // Detach Shared Memory
+    shmdt(shm_ptr);
+
+    // 3. Destroy resources using IPC_RMID
+    // Shared Memory segment marked for deletion (removed once all processes detach)
+    shmctl(shmid, IPC_RMID, NULL);
+    
+    // Semaphore set destroyed immediately (any waiting processes fail)
+    semctl(semid, 0, IPC_RMID);
+
+    printf("IPC resources marked for cleanup successfully.\n");
+    return 0;
+}
+```

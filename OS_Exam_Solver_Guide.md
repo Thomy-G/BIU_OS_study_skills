@@ -423,6 +423,23 @@ void* Oxygen(void* arg) {
 * For two-level paging with outer directory bits $D_{\text{outer}}$:
   $$\text{Inner Page Directory bits} = V - \text{Offset} - D_{\text{outer}}$$
 
+```mermaid
+flowchart TD
+    VA["Logical Address (32-bit)"] --> Dir["Outer Directory Index (10 bits)"]
+    VA --> Table["Inner Table Index (9 bits)"]
+    VA --> Offset["Offset (13 bits)"]
+    
+    CR3["Page Directory Base Register (CR3)"] --> OuterTable["Outer Page Table (Directory)"]
+    Dir --> OuterTable
+    
+    OuterTable -->|points to| InnerTable["Inner Page Table"]
+    Table --> InnerTable
+    
+    InnerTable -->|maps to Page Frame Number| Phys["Physical Memory Page Frame"]
+    Offset -->|adds to Frame Address| Phys
+    Phys --> Target["Target Byte Address"]
+```
+
 ---
 
 ### 🔑 EAT Latency Formulas
@@ -445,6 +462,17 @@ $$\text{EAT} = \alpha(\epsilon + m) + (1-\alpha)(\epsilon + (K+1)m)$$
 * Each link in the collision chain requires a memory access to read the entry.
 * EAT formula (where $C_{\text{avg}}$ is the average memory reads to find the page):
   $$\text{EAT} = \alpha(\epsilon + m) + (1-\alpha)(\epsilon + (C_{\text{avg}} + 1)m)$$
+
+```mermaid
+flowchart TD
+    VA["Logical Address (PID, Page p, Offset d)"] --> Hash["Hash Function h(PID, p)"]
+    Hash --> HashTab["Hash Table Entry (Index i)"]
+    HashTab --> Chain["Collision Chain (Traverse entries)"]
+    Chain -->|Match found at index f| Frame["Frame Number f"]
+    VA -->|Offset d| Combine["Combine (f, d)"]
+    Frame --> Combine
+    Combine --> Target["Physical Memory Address"]
+```
 
 ---
 
@@ -489,12 +517,26 @@ $$\text{EAT} = \alpha(\epsilon + m) + (1-\alpha)(\epsilon + (K+1)m)$$
 ### 📈 Virtual Memory Graphs
 
 #### 1. Page Fault Rate (PFR) vs. Time
-* **Behavior**: Sharp spikes followed by gradual exponential decay to 0.
-* **Explanation**: The spikes represent transitions to a new **Locality of Reference** where the process accesses a new set of pages. Once the working set is loaded into physical memory frames, the page fault rate drops back to zero.
+* **Behavior**: Sharp spikes representing transitions to new localities, followed by gradual exponential decay back to 0 once the pages are loaded into memory.
+
+```mermaid
+xychart-beta
+  title "Page Fault Rate vs Time (Locality Shifts)"
+  x-axis [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9]
+  y-axis "Fault Rate" 0 --> 10
+  line [10, 8, 3, 0.5, 0.1, 10, 7, 2, 0.2, 0]
+```
 
 #### 2. Working Set Size (WSS) vs. Time
-* **Behavior**: Stable horizontal step segments of varying heights.
-* **Explanation**: Represents the number of unique pages the process has accessed in the active sliding time window $\Delta$. It remains stable during execution in a single locality and adjusts dynamically during transitions.
+* **Behavior**: Stable horizontal step segments of varying heights corresponding to the active memory demands of the current execution locality.
+
+```mermaid
+xychart-beta
+  title "Working Set Size vs Time (Stable Localities)"
+  x-axis [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9]
+  y-axis "WSS (Pages)" 0 --> 8
+  line [3, 3, 3, 5, 5, 5, 5, 2, 2, 2]
+```
 
 ---
 
